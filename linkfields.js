@@ -5,9 +5,11 @@ module-type: widget
 
 Set the value of a field in a specified tiddler to be equal to the value of a source field in a source tiddler
 
-<$link-fields sourcetiddler=sourceTiddler sourcefield=source_field storetiddler=storeTiddler storefield=store_field/>
+<$link-fields $sourcetiddler=sourceTiddler $sourcefield=source_field $storetiddler=storeTiddler $storefield=store_field/>
 
-This is a modified version of the storecount widget from the MathyThing plugin, which is a modified version of the count widget in TiddlyWiki5
+Anything that doesn't start with $ will be treated as tiddler=field and the value will also be stored in the specified field in the specified tiddler. I should get a better way to write that other than =
+
+This is a modified version of the storecount widget from the MathyThing plugin, which is a modified version of the count widget in TiddlyWiki5, it also has a bit from the action-setfield widget in TiddlyWiki5
 
 \*/
 (function(){
@@ -39,11 +41,11 @@ LinkFieldsWidget.prototype.render = function(parent,nextSibling) {
 Compute the internal state of the widget
 */
 LinkFieldsWidget.prototype.execute = function() {
-	this.sourceTiddler = this.getAttribute("sourcetiddler",this.getVariable("currentTiddler"));
-	this.sourceField = this.getAttribute("sourcefield");
-	this.storeTiddler = this.getAttribute("storetiddler");
-	this.storeField = this.getAttribute("storefield");
-	this.storeIndex = this.getAttribute("storeindex");
+	this.sourceTiddler = this.getAttribute("$sourcetiddler",this.getVariable("currentTiddler"));
+	this.sourceField = this.getAttribute("$sourcefield");
+	this.storeTiddler = this.getAttribute("$storetiddler");
+	this.storeField = this.getAttribute("$storefield");
+	this.storeIndex = this.getAttribute("$storeindex");
 	
 	// Execute the filter
 	var sourceTiddler = this.wiki.getTiddler(this.sourceTiddler);
@@ -55,6 +57,17 @@ LinkFieldsWidget.prototype.execute = function() {
 	} else {
 		this.wiki.setText(this.storeTiddler,this.storeField,this.storeIndex,newvalue);
 	}
+	var self = this;
+	$tw.utils.each(this.attributes,function(attribute,name) {
+		if(name.charAt(0) !== "$") {
+			var thisTiddler = self.wiki.getTiddler(name);
+			var oldvalue = thisTiddler.getFieldString(attribute);
+			if (oldvalue === newvalue ) {
+			} else {
+				self.wiki.setText(name,attribute,undefined,newvalue);
+			}
+		}
+	});
 };
 
 /*
@@ -62,7 +75,7 @@ Refresh the widget by ensuring our attributes are up to date
 */
 LinkFieldsWidget.prototype.refresh = function(changedTiddlers) {
 	var changedAttributes = this.computeAttributes();
-	if(changedAttributes["sourcetiddler"] || changedAttributes["sourcefield"] || changedAttributes["storeindex"] || changedAttributes["storetiddler"] || changedAttributes["storefield"]) {
+	if(changedAttributes["$sourcetiddler"] || changedAttributes["$sourcefield"] || changedAttributes["$storeindex"] || changedAttributes["$storetiddler"] || changedAttributes["$storefield"]) {
 		this.refreshSelf();
 		return true;
 	}

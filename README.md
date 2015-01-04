@@ -11,5 +11,7 @@ This widget takes a source field and tiddler and a store field and tiddler, when
 Usage:
 
 ```
-<$link-fields sourcetiddler=sourceTiddler sourcefield=source_field storetiddler=storeTiddler storefield=store_field/>
+<$link-fields $sourcetiddler=sourceTiddler $sourcefield=source_field $storetiddler=storeTiddler $storefield=store_field/>
 ```
+
+other fields can be linked by adding pairs in the form `tiddlerName=field_name` as arguments. That will link the field `field_name` in the tiddler `tiddlerName` to the field `source_field` in `sourceTiddler`.
