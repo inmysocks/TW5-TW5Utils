@@ -49,7 +49,7 @@ LinkFieldsWidget.prototype.execute = function() {
 	
 	var sourceTiddler = this.wiki.getTiddler(this.sourceTiddler);
 	var storeTiddler = this.wiki.getTiddler(this.storeTiddler);
-//	if( sourceTiddler != undefined && storeTiddler != undefined ) {
+	if( sourceTiddler != undefined && storeTiddler != undefined ) {
 		var newvalue = sourceTiddler.getFieldString(this.sourceField);
 		var oldvalue = storeTiddler.getFieldString(this.storeField);
 
@@ -74,7 +74,7 @@ LinkFieldsWidget.prototype.execute = function() {
 			}
 		});
 */
-//	}
+	}
 };
 
 /*
