@@ -42,32 +42,37 @@ Compute the internal state of the widget
 */
 LinkFieldsWidget.prototype.execute = function() {
 	this.sourceTiddler = this.getAttribute("$sourcetiddler",this.getVariable("currentTiddler"));
-	this.sourceField = this.getAttribute("$sourcefield");
-	this.storeTiddler = this.getAttribute("$storetiddler");
-	this.storeField = this.getAttribute("$storefield");
+	this.sourceField = this.getAttribute("$sourcefield","source_field");
+	this.storeTiddler = this.getAttribute("$storetiddler",this.getVariable("currentTiddler"));
+	this.storeField = this.getAttribute("$storefield","store_field");
 	this.storeIndex = this.getAttribute("$storeindex");
 	
-	// Execute the filter
 	var sourceTiddler = this.wiki.getTiddler(this.sourceTiddler);
 	var storeTiddler = this.wiki.getTiddler(this.storeTiddler);
-	var oldvalue = storeTiddler.getFieldString(this.storeField);
-	var newvalue = sourceTiddler.getFieldString(this.sourceField);
+	if( typeof sourceTiddler === "string" && typeof storeTiddler === "string") {
+		var oldvalue = storeTiddler.getFieldString(this.storeField);
+		var newvalue = sourceTiddler.getFieldString(this.sourceField);
 
-	if ( oldvalue === newvalue ) {
-	} else {
-		this.wiki.setText(this.storeTiddler,this.storeField,this.storeIndex,newvalue);
-	}
-	var self = this;
-	$tw.utils.each(this.attributes,function(attribute,name) {
-		if(name.charAt(0) !== "$") {
-			var thisTiddler = self.wiki.getTiddler(attribute);
-			var oldvalue = thisTiddler.getFieldString(name);
-			if (oldvalue === newvalue ) {
-			} else {
-				self.wiki.setText(attribute,name,undefined,newvalue);
+		if ( oldvalue === newvalue ) {
+		} else {
+			if ( typeof newvalue === "string" ) {
+				this.wiki.setText(this.storeTiddler,this.storeField,this.storeIndex,newvalue);
 			}
 		}
-	});
+		var self = this;
+		$tw.utils.each(this.attributes,function(attribute,name) {
+			if(name.charAt(0) !== "$") {
+				var thisTiddler = self.wiki.getTiddler(attribute);
+				if( typeof thisTiddler === "string" ) {
+					var oldvalue = thisTiddler.getFieldString(name);
+					if (oldvalue === newvalue ) {
+					} else {
+						self.wiki.setText(thisTiddler,name,undefined,newvalue);
+					}
+				}
+			}
+		});
+	}
 };
 
 /*
