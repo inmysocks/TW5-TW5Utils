@@ -17,4 +17,4 @@ Usage:
 <$link-fields $sourcetiddler=sourceTiddler $sourcefield=source_field $storetiddler=storeTiddler $storefield=store_field/>
 ```
 
-other fields can be linked by adding pairs in the form `tiddlerName=field_name` as arguments. That will link the field `field_name` in the tiddler `tiddlerName` to the field `source_field` in `sourceTiddler`.
+other fields can be linked by adding pairs in the form `field_name=tiddlerName` as arguments. That will link the field `field_name` in the tiddler `tiddlerName` to the field `source_field` in `sourceTiddler`.

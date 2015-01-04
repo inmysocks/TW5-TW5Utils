@@ -7,7 +7,7 @@ Set the value of a field in a specified tiddler to be equal to the value of a so
 
 <$link-fields $sourcetiddler=sourceTiddler $sourcefield=source_field $storetiddler=storeTiddler $storefield=store_field/>
 
-Anything that doesn't start with $ will be treated as tiddler=field and the value will also be stored in the specified field in the specified tiddler. I should get a better way to write that other than =
+Anything that doesn't start with $ will be treated as field=tiddler and the value will also be stored in the specified field in the specified tiddler. I should get a better way to write that other than =
 
 This is a modified version of the storecount widget from the MathyThing plugin, which is a modified version of the count widget in TiddlyWiki5, it also has a bit from the action-setfield widget in TiddlyWiki5
 
@@ -60,11 +60,11 @@ LinkFieldsWidget.prototype.execute = function() {
 	var self = this;
 	$tw.utils.each(this.attributes,function(attribute,name) {
 		if(name.charAt(0) !== "$") {
-			var thisTiddler = self.wiki.getTiddler(name);
-			var oldvalue = thisTiddler.getFieldString(attribute);
+			var thisTiddler = self.wiki.getTiddler(attribute);
+			var oldvalue = thisTiddler.getFieldString(name);
 			if (oldvalue === newvalue ) {
 			} else {
-				self.wiki.setText(name,attribute,undefined,newvalue);
+				self.wiki.setText(attribute,name,undefined,newvalue);
 			}
 		}
 	});
