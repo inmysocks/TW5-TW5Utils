@@ -7,6 +7,8 @@ Set the value of a field in a specified tiddler to be equal to the value of a so
 
 <$link-fields $sourcetiddler=sourceTiddler $sourcefield=source_field $storetiddler=storeTiddler $storefield=store_field/>
 
+<$link-fields $sourcetiddler=dataTiddler $sourceindex=source_index $storetiddler=storeTiddler $storefield=store_field/>
+
 Anything that doesn't start with $ will be treated as field=tiddler and the value will also be stored in the specified field in the specified tiddler. I should get a better way to write that other than =
 
 This is a modified version of the storecount widget from the MathyThing plugin, which is a modified version of the count widget in TiddlyWiki5, it also has a bit from the action-setfield widget in TiddlyWiki5
@@ -43,6 +45,7 @@ Compute the internal state of the widget
 LinkFieldsWidget.prototype.execute = function() {
 	this.sourceTiddler = this.getAttribute("$sourcetiddler",this.getVariable("currentTiddler"));
 	this.sourceField = this.getAttribute("$sourcefield");
+	this.sourceIndex = this.getAttribute("$sourceindex");
 	this.storeTiddler = this.getAttribute("$storetiddler");
 	this.storeField = this.getAttribute("$storefield");
 	this.storeIndex = this.getAttribute("$storeindex");
@@ -50,12 +53,21 @@ LinkFieldsWidget.prototype.execute = function() {
 	var sourceTiddler = this.wiki.getTiddler(this.sourceTiddler);
 	var storeTiddler = this.wiki.getTiddler(this.storeTiddler);
 	if( sourceTiddler != undefined && storeTiddler != undefined ) {
-		var newvalue = sourceTiddler.getFieldString(this.sourceField);
-		var oldvalue = storeTiddler.getFieldString(this.storeField);
-
-		if ( oldvalue === newvalue ) {
-		} else {
-			this.wiki.setText(this.storeTiddler,this.storeField,this.storeIndex,newvalue);
+		if ( typeof this.sourceField === "string" ) {
+			var newvalue = sourceTiddler.getFieldString(this.sourceField);
+			var oldvalue = storeTiddler.getFieldString(this.storeField);
+			if ( oldvalue === newvalue ) {
+			} else {
+				this.wiki.setText(this.storeTiddler,this.storeField,this.storeIndex,newvalue);
+			}
+		} else if ( typeof this.sourceIndex === "string" ) {
+			var sourceIndex = this.sourceIndex;
+			var newvalue = this.wiki.extractTiddlerDataItem(sourceTiddler, sourceIndex, '');
+			var oldvalue = storeTiddler.getFieldString(this.storeField);
+			if ( oldvalue === newvalue ) {
+			} else {
+				this.wiki.setText(this.storeTiddler,this.storeField,this.storeIndex,newvalue);
+			}
 		}
 	}
 

@@ -14,4 +14,12 @@ Usage:
 <$link-fields $sourcetiddler=sourceTiddler $sourcefield=source_field $storetiddler=storeTiddler $storefield=store_field/>
 ```
 
+or
+
+```
+<$link-fields $sourcetiddler=sourceTiddler $sourceindex=source_index $storetiddler=storeTiddler $storefield=store_index/>
+```
+
+or any combination of $sourcefield, $sourceindex, $storefield and $storeindex. The field_name=tiddlerName assignment doesn't work for data tiddler indexes. 
+
 other fields can be linked by adding pairs in the form `field_name=tiddlerName` as arguments. That will link the field `field_name` in the tiddler `tiddlerName` to the field `source_field` in `sourceTiddler`.
