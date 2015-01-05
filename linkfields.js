@@ -43,7 +43,7 @@ Compute the internal state of the widget
 LinkFieldsWidget.prototype.execute = function() {
 	this.sourceTiddler = this.getAttribute("$sourcetiddler",this.getVariable("currentTiddler"));
 	this.sourceField = this.getAttribute("$sourcefield");
-	this.storeTiddler = this.getAttribute("$storetiddler",this.getVariable("currentTiddler"));
+	this.storeTiddler = this.getAttribute("$storetiddler");
 	this.storeField = this.getAttribute("$storefield");
 	this.storeIndex = this.getAttribute("$storeindex");
 	
@@ -57,24 +57,27 @@ LinkFieldsWidget.prototype.execute = function() {
 		} else {
 			this.wiki.setText(this.storeTiddler,this.storeField,this.storeIndex,newvalue);
 		}
-/*
-		var self = this;
-		$tw.utils.each(this.attributes,function(attribute,name) {
-			if(name.charAt(0) !== "$") {
-				var thisTiddler = self.wiki.getTiddler(attribute);
-				if( thisTiddler != undefined ) {
-					var oldvalue = thisTiddler.getFieldString(name);
-					if ( typeof name === "string") {
-						if (oldvalue === newvalue ) {
-						} else {
-							self.wiki.setText(thisTiddler,name,undefined,newvalue);
+	}
+
+	var self = this;
+	$tw.utils.each(this.attributes,function(attribute,name) {
+		if(name.charAt(0) !== "$") {
+			var sourceTiddler = self.wiki.getTiddler(self.sourceTiddler);
+			var thisTiddler = self.wiki.getTiddler(attribute);
+			if( thisTiddler != undefined && sourceTiddler != undefined ) {
+				var newvalue = sourceTiddler.getFieldString(self.sourceField);
+				var oldvalue = thisTiddler.getFieldString(name);
+				if ( typeof name === "string") {
+					if ( oldvalue === newvalue ) {
+					} else {
+						if ( typeof newvalue ==="string" ) {
+							self.wiki.setText(attribute,name,undefined,newvalue);
 						}
 					}
 				}
 			}
-		});
-*/
-	}
+		}
+	});
 };
 
 /*
